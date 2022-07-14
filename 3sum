@@ -1,47 +1,32 @@
 class Solution {
-    public Node copyRandomList(Node head) {
-          Node iter = head; 
-          Node front = head;
-
-          // First round: make copy of each node,
-          // and link them together side-by-side in a single list.
-          while (iter != null) {
-            front = iter.next;
-
-            Node copy = new Node(iter.val);
-            iter.next = copy;
-            copy.next = front;
-
-            iter = front;
-          }
-
-          // Second round: assign random pointers for the copy nodes.
-          iter = head;
-          while (iter != null) {
-            if (iter.random != null) {
-              iter.next.random = iter.random.next;
+    public List<List<Integer>> threeSum(int[] num) {
+        
+        Arrays.sort(num);
+        
+        List<List<Integer>> res = new LinkedList<>(); 
+        
+        for (int i = 0; i < num.length-2; i++) {
+            
+            if (i == 0 || (i > 0 && num[i] != num[i-1])) {
+                
+                int lo = i+1, hi = num.length-1, sum = 0 - num[i];
+                
+                while (lo < hi) {
+                    if (num[lo] + num[hi] == sum) {
+                        
+                        res.add(Arrays.asList(num[i], num[lo], num[hi]));
+                        
+                        while (lo < hi && num[lo] == num[lo+1]) lo++;
+                        while (lo < hi && num[hi] == num[hi-1]) hi--;
+                        
+                        lo++; hi--;
+                    } 
+                    else if (num[lo] + num[hi] < sum) lo++;
+                    
+                    else hi--;
+               }
             }
-            iter = iter.next.next;
-          }
-
-          // Third round: restore the original list, and extract the copy list.
-          iter = head;
-          Node pseudoHead = new Node(0);
-          Node copy = pseudoHead;
-
-          while (iter != null) {
-            front = iter.next.next;
-
-            // extract the copy
-            copy.next = iter.next;
-            copy = copy.next;
-
-            // restore the original list
-            iter.next = front;
-
-            iter = front;
-          }
-
-          return pseudoHead.next;
+        }
+        return res;
     }
 }
